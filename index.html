@@ -36,28 +36,21 @@ header{
     margin-top:10px;
     font-size:18px;
 }
-header button{
-    position:absolute;
-    top:20px;
-    right:20px;
-    background:#ff0033;
-    color:white;
-    padding:10px 15px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-}
-header button:hover{ background:#ff5555; }
 
 /* Dashboard */
 .dashboard{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); /* แต่ละปุ่มขยายได้เต็มที่ */
+    grid-template-columns: 1fr auto;
+    align-items:center;
     gap:20px;
     padding:30px;
-    justify-items:center;
-    width: 90%; /* กำหนดความกว้างรวมของ grid */
-    margin: 0 auto; /* จัดให้อยู่กลางหน้า */
+    width:90%;
+    margin:0 auto;
+}
+.cards-panel{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
 }
 .card{
     background:#111;
@@ -67,36 +60,45 @@ header button:hover{ background:#ff5555; }
     border-radius:12px;
     transition:0.3s;
     cursor:pointer;
-    width: 100%; /* ขยายเต็ม column */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height:120px; /* กำหนดความสูงเท่ากัน */
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:120px;
 }
 .card:hover{
     transform:scale(1.05);
     box-shadow:0 0 20px #ff0033;
 }
-.card h2{
-    margin:10px 0 0 0;
-    font-size:16px;
-}
-.card span{
-    font-size:30px;
-}
+.card span{ font-size:30px; }
+.card h2{ margin:10px 0 0 0; font-size:16px; }
 
-/* Dropdown */
+/* Dropdown + ปุ่มเพิ่มบ้าน */
+.top-controls{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    align-items:center;
+}
 #enemyDropdown{
-    width:80%;
-    max-width:400px;
-    margin:20px auto;
-    padding:10px;
+    width:200px;
+    padding:8px;
     border-radius:6px;
     border:none;
     background:#111;
     color:white;
+    border:2px solid #ff0033;
 }
+.top-controls button{
+    padding:8px 12px;
+    border-radius:6px;
+    border:none;
+    background:#ff0033;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+.top-controls button:hover{ background:#ff5555; }
 
 /* House Details */
 .house-card{
@@ -192,17 +194,20 @@ footer{
 </header>
 
 <section class="dashboard">
-    <div class="card" onclick="filterCategory('castle')"><span>🏰</span><h2>สงครามชิงปราสาท</h2></div>
-    <div class="card" onclick="filterCategory('guild')"><span>⚔</span><h2>สงครามกิลด์</h2></div>
-    <div class="card" onclick="filterCategory('traveler')"><span>🌌</span><h2>นักเดินทางจุติ</h2></div>
-    <div class="card" onclick="filterCategory('strategy')"><span>🧠</span><h2>แนวทางตีด่าน / อื่น ๆ</h2></div>
-</section>
+    <div class="cards-panel">
+        <div class="card" onclick="filterCategory('castle')"><span>🏰</span><h2>สงครามชิงปราสาท</h2></div>
+        <div class="card" onclick="filterCategory('guild')"><span>⚔</span><h2>สงครามกิลด์</h2></div>
+        <div class="card" onclick="filterCategory('traveler')"><span>🌌</span><h2>นักเดินทางจุติ</h2></div>
+        <div class="card" onclick="filterCategory('strategy')"><span>🧠</span><h2>แนวทางตีด่าน / อื่น ๆ</h2></div>
+    </div>
 
-<!-- Dropdown เลือกศัตรู -->
-<select id="enemyDropdown" onchange="showEnemyDetails()">
-    <option value="">-- เลือกศัตรู --</option>
-</select>
-<button onclick="toggleAddForm()">➕ เพิ่มบ้านศัตรู</button>
+    <div class="top-controls">
+        <select id="enemyDropdown" onchange="showEnemyDetails()">
+            <option value="">-- เลือกศัตรู --</option>
+        </select>
+        <button onclick="toggleAddForm()">➕ เพิ่มบ้านศัตรู</button>
+    </div>
+</section>
 
 <!-- แสดงรายละเอียดบ้านศัตรู -->
 <div id="houseDetails"></div>
@@ -211,10 +216,14 @@ footer{
 <section id="add-form">
     <h3>เพิ่มบ้านศัตรู</h3>
     <input type="text" id="enemy_name" placeholder="ชื่อศัตรู" required>
-    <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู<input type="file" id="enemy_file" multiple accept="image/*"></label>
+    <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู
+        <input type="file" id="enemy_file" multiple accept="image/*">
+    </label>
     <div id="enemy_preview"></div>
 
-    <label class="upload-btn">⚔ เลือกรูปทีมบุก<input type="file" id="team_file" multiple accept="image/*"></label>
+    <label class="upload-btn">⚔ เลือกรูปทีมบุก
+        <input type="file" id="team_file" multiple accept="image/*">
+    </label>
     <div id="team_preview"></div>
 
     <textarea id="strategy" rows="3" placeholder="รายละเอียด / วิธีบุก" required></textarea>
