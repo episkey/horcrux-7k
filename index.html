@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HORCRUX Command Center</title>
+
+<!-- Orbitron Font -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:'Orbitron',sans-serif;
+    background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
+    color:white;
+}
+
+/* Header / โลโก้ */
+header{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.logo-container{
+    position:relative;
+    display:inline-block;
+}
+
+.logo-container img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:none;
+    box-shadow: 0 0 30px #ff0033, 0 0 50px rgba(255,0,0,0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.logo-container::before{
+    content:'';
+    position:absolute;
+    top:-20px;
+    left:-20px;
+    width:240px;
+    height:240px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(255,0,0,0.4), transparent 70%);
+    filter: blur(25px);
+    animation: flame 2s infinite alternate;
+    z-index:1;
+}
+
+@keyframes flame{
+    0%{transform: scale(1) rotate(0deg);}
+    25%{transform: scale(1.05) rotate(5deg);}
+    50%{transform: scale(1.1) rotate(-5deg);}
+    75%{transform: scale(1.05) rotate(5deg);}
+    100%{transform: scale(1) rotate(0deg);}
+}
+
+.logo-container .sub{
+    color:#ff4444;
+    margin-top:15px;
+    font-size:22px;
+}
+
+/* Dashboard */
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    padding:50px;
+}
+
+.card{
+    background:#111;
+    border:2px solid #ff0033;
+    padding:40px 20px;
+    text-align:center;
+    border-radius:12px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 20px #ff0033;
+}
+
+.card h2{
+    margin:15px 0;
+    font-size:20px;
+}
+
+.card span{
+    font-size:40px;
+}
+
+/* บ้านศัตรู */
+.house-list{
+    margin:30px 50px;
+    max-height:500px;    /* หน้าไม่ยาวเกินไป */
+    overflow-y:auto;     /* scroll ภายใน container */
+    padding-right:10px;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    background:#111;
+}
+
+
+.house-card{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.house-card img{
+    max-width:100%;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+/* Footer */
+footer{
+    text-align:center;
+    padding:30px;
+    color:#555;
+}
+
+/* Form เพิ่มบ้านศัตรู */
+#add-form{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:20px;
+    margin:20px auto;
+    max-width:600px;
+    text-align:center;
+}
+#add-form input, #add-form textarea, #add-form select{
+    width:100%;
+    margin-bottom:10px;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+#add-form button{
+    background:#ff0033;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+}
+#add-form button:hover{
+    background:#ff5555;
+}
+
+/* ปุ่มเลือกไฟล์ */
+.upload-btn{
+    display:block;
+    background:#ff0033;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:0.3s;
+    text-align:center;
+}
+.upload-btn:hover{
+    background:#ff4444;
+}
+.upload-btn input[type=file]{
+    display:none;
+}
+
+/* preview container */
+.preview-container{
+    display:flex;
+    overflow-x:auto;
+    gap:5px;
+    margin-bottom:10px;
+    scroll-behavior:smooth;
+}
+.preview-container img{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    border-radius:6px;
+    cursor:pointer;
+    border:1px solid #ff0033;
+    flex-shrink:0;
+}
+
+/* slider บ้านศัตรู */
+.slider {
+    display:flex;
+    overflow-x:auto;
+    gap:10px;
+    scroll-behavior:smooth;
+}
+.slider img{
+    height:150px; /* ลดความสูงให้ดูหลายรูปพร้อมกัน */
+    border-radius:8px;
+    flex-shrink:0;
+}
+
+/* modal zoom */
+#imgModal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000000cc;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+#imgModal img{
+    max-width:90%;
+    max-height:90%;
+}
+
+/* ปุ่ม slider (ถ้าต้องการ) */
+.prev, .next{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:#00000070;
+    color:white;
+    border:none;
+    padding:5px 8px;
+    cursor:pointer;
+    z-index:2;
+}
+.prev{ left:0; }
+.next{ right:0; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="HORCRUX-LOGO.png" alt="HORCRUX Logo">
+        <div class="sub">COMMAND CENTER</div>
+    </div>
+</header>
+
+<section class="dashboard">
+    <div class="card" onclick="filterCategory('castle')">
+        <span>🏰</span>
+        <h2>สงครามชิงปราสาท</h2>
+    </div>
+    <div class="card" onclick="filterCategory('guild')">
+        <span>⚔</span>
+        <h2>สงครามกิลด์</h2>
+    </div>
+    <div class="card" onclick="filterCategory('traveler')">
+        <span>🌌</span>
+        <h2>กลุ่มนักเดินทางจุติ</h2>
+    </div>
+    <div class="card" onclick="filterCategory('strategy')">
+        <span>🧠</span>
+        <h2>แนวทางตีด่าน / อื่น ๆ</h2>
+    </div>
+</section>
+
+<!-- ฟอร์มเพิ่มบ้านศัตรู -->
+<form id="add-form">
+    <h3>เพิ่มบ้านศัตรู</h3>
+
+    <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู
+        <input type="file" id="enemy_file" multiple accept="image/*">
+    </label>
+    <div class="preview-container" id="enemy_preview"></div>
+
+    <label class="upload-btn">⚔ เลือกรูปทีมบุก
+        <input type="file" id="team_file" multiple accept="image/*">
+    </label>
+    <div class="preview-container" id="team_preview"></div>
+
+    <textarea id="strategy" rows="3" placeholder="วิธีบุกบ้าน" required></textarea>
+
+    <select id="category">
+        <option value="castle">สงครามชิงปราสาท</option>
+        <option value="guild">สงครามกิลด์</option>
+        <option value="traveler">กลุ่มนักเดินทางจุติ</option>
+        <option value="strategy">แนวทางตีด่าน / อื่น ๆ</option>
+    </select>
+
+    <button type="button" onclick="saveData()">บันทึกบ้าน</button>
+</form>
+
+
+<div class="house-list" id="list"></div>
+
+<div id="imgModal" onclick="closeModal()">
+    <img id="modalImg">
+</div>
+
+<footer>
+    HORCRUX • Dominate The War
+</footer>
+
+<script>
+// ----- Supabase setup -----
+const supabaseClient = supabase.createClient(
+  "https://cwkmfpxmzqlbrioununv.supabase.co",
+  "sb_publishable_bmbm3cCoH3OoVvMfbQis8A_AgJgpCMX"
+);
+
+let allData=[];
+
+// ======= preview before upload =======
+document.getElementById("enemy_file").addEventListener("change",e=>{
+    showPreview(e.target.files,"enemy_preview");
+});
+document.getElementById("team_file").addEventListener("change",e=>{
+    showPreview(e.target.files,"team_preview");
+});
+
+function showPreview(files,previewId){
+    let html="";
+    for(const file of files){
+        html+=`<img src="${URL.createObjectURL(file)}" onclick="openModal(this.src)">`;
+    }
+    document.getElementById(previewId).innerHTML=html;
+}
+
+// ======= load data =======
+async function loadData(){
+    const { data } = await supabaseClient
+        .from("enemy_base")
+        .select("*")
+        .order("created_at",{ascending:false});
+    allData = data || [];
+    displayData(allData);
+}
+
+// ======= display data =======
+function createSlider(images,id){
+    if(!images.length) return "-";
+    return `
+    <div class="slider">
+        <button class="prev" onclick="moveSlide('${id}',-1)">‹</button>
+        <div class="slide-container" id="${id}">
+            ${images.map(img=>`<img src="${img}" onclick="openModal('${img}')">`).join("")}
+        </div>
+        <button class="next" onclick="moveSlide('${id}',1)">›</button>
+    </div>`;
+}
+
+function displayData(data){
+    let html="";
+    data.forEach(row=>{
+        let enemyArray=Array.isArray(row.enemy_imgs)?row.enemy_imgs:[];
+        let teamArray=Array.isArray(row.team_imgs)?row.team_imgs:[];
+
+        html+=`
+        <div class="house-card">
+            <b>ฝั่งศัตรู:</b><br>
+            ${createSlider(enemyArray,"enemy_"+row.id)}<br>
+            <b>ทีมบุก:</b><br>
+            ${createSlider(teamArray,"team_"+row.id)}<br>
+            <b>หมวด:</b> ${row.category || "-"}<br>
+            <b>วิธีบุก:</b><br>${row.strategy || "-"}<br><br>
+            <button onclick="deleteData(${row.id})">ลบ</button>
+        </div>`;
+    });
+    document.getElementById("list").innerHTML=html;
+}
+
+// ======= slider move =======
+function moveSlide(id,dir){
+    const container=document.getElementById(id);
+    container.scrollLeft += dir*130;
+}
+
+// ======= modal =======
+function openModal(src){
+    document.getElementById("modalImg").src=src;
+    document.getElementById("imgModal").style.display="flex";
+}
+function closeModal(){
+    document.getElementById("imgModal").style.display="none";
+}
+
+// ======= upload multiple images =======
+async function uploadMultipleImages(files){
+    if(!files.length) return [];
+    const urls=[];
+    for(const file of files){
+        const ext=file.name.split('.').pop();
+        const name=`${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+        const path=`horcrux/${name}`;
+
+        const { error } = await supabaseClient.storage
+            .from("images")
+            .upload(path,file,{upsert:true});
+
+        if(error){ console.error(error); continue; }
+
+        const { data } = supabaseClient.storage
+            .from("images")
+            .getPublicUrl(path);
+
+        urls.push(data.publicUrl);
+    }
+    return urls;
+}
+
+// ======= save data =======
+async function saveData(){
+    const enemyFiles=document.getElementById("enemy_file").files;
+    const teamFiles=document.getElementById("team_file").files;
+    const strategy=document.getElementById("strategy").value;
+    const category=document.getElementById("category").value;
+
+    if(enemyFiles.length===0 || teamFiles.length===0 || !strategy){
+        alert("กรุณากรอกข้อมูลให้ครบ!");
+        return;
+    }
+
+    const enemyUrls=await uploadMultipleImages(enemyFiles);
+    const teamUrls=await uploadMultipleImages(teamFiles);
+
+    const { error }=await supabaseClient
+        .from("enemy_base")
+        .insert([{
+            enemy_imgs:enemyUrls,
+            team_imgs:teamUrls,
+            strategy,
+            category
+        }]);
+
+    if(error){ alert(error.message); return; }
+
+    alert("บันทึกสำเร็จ!");
+    document.getElementById("add-form").reset();
+    document.getElementById("enemy_preview").innerHTML="";
+    document.getElementById("team_preview").innerHTML="";
+    loadData();
+}
+
+// ======= delete =======
+async function deleteData(id){
+    if(!confirm("ลบรายการนี้?")) return;
+    await supabaseClient.from("enemy_base").delete().eq("id",id);
+    loadData();
+}
+
+// ======= filter category =======
+function filterCategory(cat){
+    const filtered = allData.filter(row => row.category === cat);
+    displayData(filtered);
+}
+
+// ======= init =======
+loadData();
+</script>
+
+
+
+</body>
+</html>

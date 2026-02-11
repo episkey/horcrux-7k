@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HORCRUX Command Center</title>
+
+<!-- Orbitron Font -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:'Orbitron',sans-serif;
+    background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
+    color:white;
+}
+
+/* Header / โลโก้ */
+header{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.logo-container{
+    position:relative;
+    display:inline-block;
+}
+
+.logo-container img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:none;
+    box-shadow: 0 0 30px #ff0033, 0 0 50px rgba(255,0,0,0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.logo-container::before{
+    content:'';
+    position:absolute;
+    top:-20px;
+    left:-20px;
+    width:240px;
+    height:240px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(255,0,0,0.4), transparent 70%);
+    filter: blur(25px);
+    animation: flame 2s infinite alternate;
+    z-index:1;
+}
+
+@keyframes flame{
+    0%{transform: scale(1) rotate(0deg);}
+    25%{transform: scale(1.05) rotate(5deg);}
+    50%{transform: scale(1.1) rotate(-5deg);}
+    75%{transform: scale(1.05) rotate(5deg);}
+    100%{transform: scale(1) rotate(0deg);}
+}
+
+.logo-container .sub{
+    color:#ff4444;
+    margin-top:15px;
+    font-size:22px;
+}
+
+/* Dashboard */
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    padding:50px;
+}
+
+.card{
+    background:#111;
+    border:2px solid #ff0033;
+    padding:40px 20px;
+    text-align:center;
+    border-radius:12px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 20px #ff0033;
+}
+
+.card h2{
+    margin:15px 0;
+    font-size:20px;
+}
+
+.card span{
+    font-size:40px;
+}
+
+/* บ้านศัตรู */
+.house-list{
+    margin:30px 50px;
+}
+
+.house-card{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.house-card img{
+    max-width:100%;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+/* Footer */
+footer{
+    text-align:center;
+    padding:30px;
+    color:#555;
+}
+
+/* Form เพิ่มบ้านศัตรู */
+#add-form{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:20px;
+    margin:20px auto;
+    max-width:600px;
+    text-align:center;
+}
+#add-form input, #add-form textarea, #add-form select{
+    width:100%;
+    margin-bottom:10px;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+#add-form button{
+    background:#ff0033;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+#add-form button:hover{
+    background:#ff5555;
+
+    
+}
+.upload-btn{
+    display:block;
+    background:#ff0033;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:0.3s;
+    text-align:center;
+}
+
+.upload-btn:hover{
+    background:#ff4444;
+}
+.slider {
+    display:flex;
+    overflow-x:auto;
+    gap:10px;
+    scroll-behavior:smooth;
+}
+
+.slider img{
+    height:200px;
+    border-radius:8px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="HORCRUX-LOGO.png" alt="HORCRUX Logo">
+        <div class="sub">COMMAND CENTER</div>
+    </div>
+</header>
+
+<section class="dashboard">
+    <div class="card" onclick="filterCategory('castle')">
+        <span>🏰</span>
+        <h2>สงครามชิงปราสาท</h2>
+    </div>
+    <div class="card" onclick="filterCategory('guild')">
+        <span>⚔</span>
+        <h2>สงครามกิลด์</h2>
+    </div>
+    <div class="card" onclick="filterCategory('traveler')">
+        <span>🌌</span>
+        <h2>กลุ่มนักเดินทางจุติ</h2>
+    </div>
+    <div class="card" onclick="filterCategory('strategy')">
+        <span>🧠</span>
+        <h2>แนวทางตีด่าน / อื่น ๆ</h2>
+    </div>
+</section>
+
+<!-- ฟอร์มเพิ่มบ้านศัตรู -->
+<form id="add-form">
+    <h3>เพิ่มบ้านศัตรู</h3>
+
+   <label class="upload-btn">
+  📷 เลือกรูปฝั่งศัตรู
+  <input type="file" id="enemy_file" accept="image/*" multiple required hidden>
+</label>
+
+<label class="upload-btn">
+  ⚔ เลือกรูปทีมบุก
+  <input type="file" id="team_file" accept="image/*" multiple required hidden>
+</label>
+
+
+    <textarea id="strategy" rows="3" placeholder="วิธีบุกบ้าน" required></textarea>
+    <select id="category">
+        <option value="castle">สงครามชิงปราสาท</option>
+        <option value="guild">สงครามกิลด์</option>
+        <option value="traveler">กลุ่มนักเดินทางจุติ</option>
+        <option value="strategy">แนวทางตีด่าน / อื่น ๆ</option>
+    </select>
+
+    <button type="button" onclick="saveData()">บันทึกบ้าน</button>
+</form>
+
+<!-- แสดงบ้านศัตรู -->
+<div class="house-list" id="list"></div>
+
+<footer>
+    HORCRUX • Dominate The War
+</footer>
+
+<script>
+// ================== SUPABASE CONFIG ==================
+const supabaseClient = supabase.createClient(
+  "https://cwkmfpxmzqlbrioununv.supabase.co",
+  "sb_publishable_bmbm3cCoH3OoVvMfbQis8A_AgJgpCMX"
+);
+
+// ================== GLOBAL DATA ==================
+let allData = [];
+
+// ================== LOAD DATA ==================
+async function loadData(){
+    const { data, error } = await supabaseClient
+        .from("enemy_base")
+        .select("*")
+        .order("created_at",{ ascending: false });
+
+    if(error){
+        console.error("LOAD ERROR:", error);
+        return;
+    }
+
+    allData = data || [];
+    displayData(allData);
+}
+
+// ================== DISPLAY ==================
+function displayData(data){
+
+    let html = "";
+
+    data.forEach(row=>{
+
+        let enemyArray = Array.isArray(row.enemy_imgs) ? row.enemy_imgs : [];
+        let teamArray  = Array.isArray(row.team_imgs) ? row.team_imgs : [];
+
+        let enemyImages = `
+            <div class="slider">
+                ${enemyArray.map(img => `<img src="${img}" class="slide-img">`).join("")}
+            </div>
+        `;
+
+        let teamImages = `
+            <div class="slider">
+                ${teamArray.map(img => `<img src="${img}" class="slide-img">`).join("")}
+            </div>
+        `;
+
+        html += `
+        <div class="house-card">
+            <b>ฝั่งศัตรู:</b><br>
+            ${enemyImages}
+            <br>
+            <b>ทีมบุก:</b><br>
+            ${teamImages}
+            <br>
+            <b>หมวด:</b> ${row.category || "-"} <br>
+            <b>วิธีบุก:</b><br>${row.strategy || "-"}
+        </div>`;
+    });
+
+    document.getElementById("list").innerHTML = html;
+}
+
+// ================== FILTER ==================
+function filterCategory(cat){
+    if(!cat){
+        displayData(allData);
+        return;
+    }
+    const filtered = allData.filter(row => row.category === cat);
+    displayData(filtered);
+}
+
+// ================== UPLOAD MULTIPLE ==================
+async function uploadMultipleImages(files){
+
+    if(!files || files.length === 0) return [];
+
+    const urls = [];
+
+    for(const file of files){
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `horcrux/${fileName}`;
+
+        const { error: uploadError } = await supabaseClient.storage
+            .from('images')
+            .upload(filePath, file, { cacheControl: '3600', upsert: true });
+
+        if(uploadError){
+            console.error("UPLOAD ERROR:", uploadError);
+            continue;
+        }
+
+        const { data: urlData } = supabaseClient
+            .storage
+            .from('images')
+            .getPublicUrl(filePath);
+
+        urls.push(urlData.publicUrl);
+    }
+
+    return urls;
+}
+
+// ================== SAVE DATA ==================
+async function saveData(){
+
+    const enemyFiles = document.getElementById("enemy_file").files;
+    const teamFiles  = document.getElementById("team_file").files;
+    const strategy   = document.getElementById("strategy").value.trim();
+    const category   = document.getElementById("category").value;
+
+    if(enemyFiles.length === 0 || teamFiles.length === 0 || !strategy){
+        alert("กรุณากรอกข้อมูลให้ครบ!");
+        return;
+    }
+
+    // อัปโหลดรูปก่อน
+    const enemyUrls = await uploadMultipleImages(enemyFiles);
+    const teamUrls  = await uploadMultipleImages(teamFiles);
+
+    console.log("Enemy URLs:", enemyUrls);
+    console.log("Team URLs:", teamUrls);
+
+    if(enemyUrls.length === 0 || teamUrls.length === 0){
+        alert("อัปโหลดรูปไม่สำเร็จ");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("enemy_base")
+        .insert([{
+            enemy_imgs: enemyUrls,
+            team_imgs: teamUrls,
+            strategy: strategy,
+            category: category
+        }]);
+
+    if(error){
+        console.error("INSERT ERROR:", error);
+        alert(error.message);
+    } else {
+        alert("บันทึกสำเร็จ!");
+        document.getElementById("add-form").reset();
+        loadData();
+    }
+}
+
+// ================== AUTO LOAD ==================
+loadData();
+
+</script>
+
+</body>
+</html>
