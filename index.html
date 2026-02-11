@@ -9,11 +9,23 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-body{
+body {
     margin:0;
     font-family:'Orbitron',sans-serif;
-    background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
     color:white;
+
+    /* background ใหม่ */
+    background: url('Horcrux-BG.png') no-repeat center center fixed; 
+    background-size: cover;  /* ปรับขนาดเต็มหน้าจอทั้ง width/height */
+}
+
+/* หากต้องการให้ overlay มืดหน่อยเพื่อให้ตัวหนังสืออ่านง่าย */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);  /* ปรับความเข้มของ overlay */
+    z-index: -1;
 }
 header{
     text-align:center;
