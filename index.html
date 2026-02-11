@@ -79,9 +79,12 @@ header{
     gap:10px;
     justify-content:flex-end;
     align-items:center;
+    flex-wrap: wrap; /* เพิ่มให้ย่อบรรทัดเมื่อหน้าจอเล็ก */
 }
 #enemyDropdown{
-    width:200px;
+    flex:1 1 150px; /* ยืดหยุ่นได้ สูงสุดและต่ำสุด */
+    min-width:120px;
+    max-width:250px;
     padding:8px;
     border-radius:6px;
     border:none;
@@ -90,6 +93,7 @@ header{
     border:2px solid #ff0033;
 }
 .top-controls button{
+    flex:0 0 auto; /* ขนาดคงที่แต่เลื่อนได้ตาม wrap */
     padding:8px 12px;
     border-radius:6px;
     border:none;
@@ -97,6 +101,7 @@ header{
     color:white;
     cursor:pointer;
     transition:0.3s;
+    white-space: nowrap; /* ห้ามขึ้นบรรทัด */
 }
 .top-controls button:hover{ background:#ff5555; }
 
