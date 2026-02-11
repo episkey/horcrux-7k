@@ -15,118 +15,143 @@ body{
     background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
     color:white;
 }
-
 header{
     text-align:center;
-    padding:60px 20px;
+    padding:40px 20px;
+    position: relative;
 }
-
 .logo-container{
     position:relative;
     display:inline-block;
 }
-
 .logo-container img{
-    width:200px;
-    height:200px;
+    width:150px;
+    height:150px;
     border-radius:50%;
     border:none;
     box-shadow: 0 0 30px #ff0033, 0 0 50px rgba(255,0,0,0.5);
-    position: relative;
-    z-index: 2;
 }
-
-.logo-container::before{
-    content:'';
-    position:absolute;
-    top:-20px;
-    left:-20px;
-    width:240px;
-    height:240px;
-    border-radius:50%;
-    background: radial-gradient(circle, rgba(255,0,0,0.4), transparent 70%);
-    filter: blur(25px);
-    animation: flame 2s infinite alternate;
-    z-index:1;
-}
-
-@keyframes flame{
-    0%{transform: scale(1) rotate(0deg);}
-    25%{transform: scale(1.05) rotate(5deg);}
-    50%{transform: scale(1.1) rotate(-5deg);}
-    75%{transform: scale(1.05) rotate(5deg);}
-    100%{transform: scale(1) rotate(0deg);}
-}
-
 .logo-container .sub{
     color:#ff4444;
-    margin-top:15px;
-    font-size:22px;
+    margin-top:10px;
+    font-size:18px;
 }
+header button{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#ff0033;
+    color:white;
+    padding:10px 15px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+header button:hover{ background:#ff5555; }
 
 /* Dashboard */
 .dashboard{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
     gap:20px;
-    padding:40px;
+    padding:30px;
+    justify-items:center;
 }
-
 .card{
     background:#111;
     border:2px solid #ff0033;
-    padding:20px;
+    padding:25px 10px;
     text-align:center;
     border-radius:12px;
     transition:0.3s;
     cursor:pointer;
 }
-
 .card:hover{
     transform:scale(1.05);
     box-shadow:0 0 20px #ff0033;
 }
-
 .card h2{
     margin:10px 0;
-    font-size:18px;
+    font-size:16px;
 }
-
 .card span{
     font-size:30px;
 }
 
-button{
-    background:#ff0033;
-    color:white;
-    padding:8px 16px;
-    border:none;
+/* Dropdown */
+#enemyDropdown{
+    width:80%;
+    max-width:400px;
+    margin:20px auto;
+    padding:10px;
     border-radius:6px;
-    cursor:pointer;
-    margin:5px 0;
+    border:none;
+    background:#111;
+    color:white;
 }
 
-button:hover{
-    background:#ff5555;
+/* House Details */
+.house-card{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:15px;
+    margin:15px auto;
+    max-width:600px;
+    text-align:center;
 }
-
-.house-list{
-    margin:20px 50px;
-}
-
 .slider {
     display:flex;
     overflow-x:auto;
     gap:10px;
     scroll-behavior:smooth;
 }
-
 .slider img{
-    height:120px;
-    border-radius:8px;
+    height:150px;
+    border-radius:6px;
     cursor:pointer;
 }
 
+/* Form เพิ่มบ้านศัตรู */
+#add-form{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:20px;
+    margin:20px auto;
+    max-width:600px;
+    text-align:center;
+    display:none;
+}
+#add-form input, #add-form textarea, #add-form select{
+    width:100%;
+    margin-bottom:10px;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+#add-form button{
+    background:#ff0033;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+#add-form button:hover{ background:#ff5555; }
+.upload-btn{
+    display:block;
+    background:#ff0033;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:0.3s;
+    text-align:center;
+}
+.upload-btn:hover{ background:#ff4444; }
+
+/* modal zoom */
 #imgModal{
     display:none;
     position:fixed;
@@ -139,42 +164,7 @@ button:hover{
 #imgModal img{
     max-width:90%;
     max-height:90%;
-    border-radius:8px;
 }
-
-#add-form{
-    background:#111;
-    border:2px solid #ff0033;
-    border-radius:12px;
-    padding:20px;
-    margin:20px auto;
-    max-width:600px;
-    text-align:center;
-}
-
-#add-form input, #add-form textarea, #add-form select{
-    width:100%;
-    margin-bottom:10px;
-    padding:8px;
-    border-radius:6px;
-    border:none;
-}
-
-.upload-btn{
-    display:block;
-    background:#ff0033;
-    padding:10px;
-    border-radius:8px;
-    cursor:pointer;
-    margin-bottom:10px;
-    transition:0.3s;
-    text-align:center;
-}
-
-.upload-btn:hover{
-    background:#ff4444;
-}
-
 </style>
 </head>
 <body>
@@ -184,40 +174,31 @@ button:hover{
         <img src="HORCRUX-LOGO.png" alt="HORCRUX Logo">
         <div class="sub">COMMAND CENTER</div>
     </div>
+    <button onclick="toggleAddForm()">➕ เพิ่มบ้านศัตรู</button>
 </header>
 
 <section class="dashboard">
-    <div class="card" onclick="showCategory('castle')">
-        <span>🏰</span>
-        <h2>สงครามชิงปราสาท</h2>
-    </div>
-    <div class="card" onclick="showCategory('guild')">
-        <span>⚔</span>
-        <h2>สงครามกิลด์</h2>
-    </div>
-    <div class="card" onclick="showCategory('traveler')">
-        <span>🌌</span>
-        <h2>นักเดินทางจุติ</h2>
-    </div>
-    <div class="card" onclick="showCategory('strategy')">
-        <span>🧠</span>
-        <h2>แนวทางตีด่าน / อื่น ๆ</h2>
-    </div>
+    <div class="card" onclick="filterCategory('castle')"><span>🏰</span><h2>สงครามชิงปราสาท</h2></div>
+    <div class="card" onclick="filterCategory('guild')"><span>⚔</span><h2>สงครามกิลด์</h2></div>
+    <div class="card" onclick="filterCategory('traveler')"><span>🌌</span><h2>นักเดินทางจุติ</h2></div>
+    <div class="card" onclick="filterCategory('strategy')"><span>🧠</span><h2>แนวทางตีด่าน / อื่น ๆ</h2></div>
 </section>
 
+<!-- Dropdown เลือกศัตรู -->
+<select id="enemyDropdown" onchange="showEnemyDetails()">
+    <option value="">-- เลือกศัตรู --</option>
+</select>
+
+<!-- แสดงรายละเอียดบ้านศัตรู -->
+<div id="houseDetails"></div>
+
 <!-- ฟอร์มเพิ่มบ้านศัตรู -->
-<section id="add-form" style="display:none;">
+<section id="add-form">
     <h3>เพิ่มบ้านศัตรู</h3>
-    <label class="upload-btn">
-        📷 เลือกรูปฝั่งศัตรู
-        <input type="file" id="enemy_file" multiple accept="image/*">
-    </label>
+    <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู<input type="file" id="enemy_file" multiple accept="image/*"></label>
     <div id="enemy_preview"></div>
 
-    <label class="upload-btn">
-        ⚔ เลือกรูปทีมบุก
-        <input type="file" id="team_file" multiple accept="image/*">
-    </label>
+    <label class="upload-btn">⚔ เลือกรูปทีมบุก<input type="file" id="team_file" multiple accept="image/*"></label>
     <div id="team_preview"></div>
 
     <textarea id="strategy" rows="3" placeholder="ชื่อ/วิธีบุกบ้าน" required></textarea>
@@ -231,14 +212,10 @@ button:hover{
     <button type="button" onclick="saveData()">บันทึกบ้าน</button>
 </section>
 
-<section id="list"></section>
+<!-- modal zoom -->
+<div id="imgModal" onclick="closeModal()"><img id="modalImg"></div>
 
-<section id="detail"></section>
-
-<!-- Modal Zoom -->
-<div id="imgModal" onclick="this.style.display='none'">
-    <img id="modalImg">
-</div>
+<footer style="text-align:center; padding:20px; color:#555;">HORCRUX • Dominate The War</footer>
 
 <script>
 const supabaseClient = supabase.createClient(
@@ -247,85 +224,98 @@ const supabaseClient = supabase.createClient(
 );
 
 let allData = [];
-let currentCategory = null;
-let currentDetailId = null;
+let currentCategory = "";
 
-// โหลดข้อมูล
+// โหลดข้อมูลบ้านทั้งหมด
 async function loadData(){
-    const { data, error } = await supabaseClient
-        .from("enemy_base")
-        .select("*")
-        .order("created_at",{ ascending: false });
+    const { data, error } = await supabaseClient.from("enemy_base").select("*").order("created_at",{ascending:false});
     if(error){ console.error(error); return; }
     allData = data;
 }
-loadData();
 
-// แสดงหมวดหมู่
-function showCategory(cat){
-    const listEl = document.getElementById("list");
-    listEl.innerHTML = "";
-
-    // ถ้ากดซ้ำ category เดิม ให้ปิด
-    if(currentCategory === cat){
-        currentCategory = null;
-        document.getElementById("detail").innerHTML = "";
-        return;
-    }
-
+// กรองหมวดหมู่ -> ใส่ dropdown
+function filterCategory(cat){
     currentCategory = cat;
-
-    const filtered = allData.filter(d=>d.category===cat);
-
+    const filtered = allData.filter(row=>row.category === cat);
+    const dropdown = document.getElementById("enemyDropdown");
+    dropdown.innerHTML = `<option value="">-- เลือกศัตรู --</option>`;
     filtered.forEach((row,i)=>{
-        const btn = document.createElement("button");
-        btn.textContent = row.strategy.substring(0,30) || `ศัตรู ${i+1}`;
-        btn.onclick = ()=>showDetail(row);
-        listEl.appendChild(btn);
+        dropdown.innerHTML += `<option value="${i}">${row.strategy}</option>`;
     });
-
-    document.getElementById("detail").innerHTML = "";
+    document.getElementById("houseDetails").innerHTML = "";
 }
 
-// แสดงรายละเอียด
-function showDetail(row){
-    const detailEl = document.getElementById("detail");
+// แสดงรายละเอียดศัตรู
+function showEnemyDetails(){
+    const dropdown = document.getElementById("enemyDropdown");
+    const idx = dropdown.value;
+    if(idx === ""){ document.getElementById("houseDetails").innerHTML=""; return; }
+    const row = allData.filter(r=>r.category===currentCategory)[idx];
 
-    // ถ้ากดซ้ำปุ่มเดิม ให้ปิด
-    if(currentDetailId === row.id){
-        currentDetailId = null;
-        detailEl.innerHTML = "";
-        return;
-    }
-    currentDetailId = row.id;
+    let enemySlider = `<div class="slider">${(row.enemy_imgs||[]).map(u=>`<img src="${u}" onclick="zoomImage('${u}')">`).join("")}</div>`;
+    let teamSlider = `<div class="slider">${(row.team_imgs||[]).map(u=>`<img src="${u}" onclick="zoomImage('${u}')">`).join("")}</div>`;
 
-    let html = `<h3>รายละเอียดศัตรู</h3>`;
-    html += `<p><b>วิธีบุก:</b> ${row.strategy}</p>`;
+    document.getElementById("houseDetails").innerHTML = `
+        <div class="house-card">
+            <b>ฝั่งศัตรู:</b><br>${enemySlider}<br>
+            <b>ทีมบุก:</b><br>${teamSlider}<br>
+            <b>รายละเอียด:</b><br>${row.strategy}
+        </div>
+    `;
+}
 
-    html += `<b>ฝั่งศัตรู:</b>`;
-    html += `<div class="slider">`;
-    (row.enemy_imgs || []).forEach(i=>{
-        html += `<img src="${i}" onclick="openModal('${i}')">`;
-    });
-    html += `</div>`;
-
-    html += `<b>ทีมบุก:</b>`;
-    html += `<div class="slider">`;
-    (row.team_imgs || []).forEach(i=>{
-        html += `<img src="${i}" onclick="openModal('${i}')">`;
-    });
-    html += `</div>`;
-
-    detailEl.innerHTML = html;
+// Toggle ฟอร์มเพิ่มบ้าน
+function toggleAddForm(){
+    const form = document.getElementById("add-form");
+    form.style.display = (form.style.display==="none")?"block":"none";
 }
 
 // Modal Zoom
-function openModal(src){
+function zoomImage(src){
     const modal = document.getElementById("imgModal");
-    const modalImg = document.getElementById("modalImg");
-    modalImg.src = src;
-    modal.style.display = "flex";
+    modal.style.display="flex";
+    document.getElementById("modalImg").src = src;
 }
+function closeModal(){ document.getElementById("imgModal").style.display="none"; }
+
+// อัปโหลดหลายรูป
+async function uploadMultipleImages(files){
+    if(!files || files.length===0) return [];
+    const urls = [];
+    for(const file of files){
+        const ext = file.name.split('.').pop();
+        const name = `${Date.now()}_${Math.random().toString(36).substring(2)}.${ext}`;
+        const path = `horcrux/${name}`;
+        const { error } = await supabaseClient.storage.from('images').upload(path, file, {cacheControl:'3600', upsert:true});
+        if(error){ console.error(error); continue; }
+        const { data: urlData } = supabaseClient.storage.from('images').getPublicUrl(path);
+        urls.push(urlData.publicUrl);
+    }
+    return urls;
+}
+
+// บันทึกบ้าน
+async function saveData(){
+    const enemyFiles = document.getElementById("enemy_file").files;
+    const teamFiles = document.getElementById("team_file").files;
+    const strategy = document.getElementById("strategy").value;
+    const category = document.getElementById("category").value;
+    if(enemyFiles.length===0||teamFiles.length===0||!strategy){ alert("กรุณากรอกทุกช่อง!"); return; }
+    const enemyUrls = await uploadMultipleImages(enemyFiles);
+    const teamUrls = await uploadMultipleImages(teamFiles);
+    const { error } = await supabaseClient.from("enemy_base").insert([{
+        enemy_imgs: enemyUrls,
+        team_imgs: teamUrls,
+        strategy,
+        category
+    }]);
+    if(error){ alert(error.message); return; }
+    alert("บันทึกสำเร็จ!");
+    document.getElementById("add-form").reset();
+    loadData();
+}
+
+loadData();
 </script>
 </body>
 </html>
