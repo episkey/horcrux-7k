@@ -107,7 +107,7 @@ header button:hover{ background:#ff5555; }
     scroll-behavior:smooth;
 }
 .slider img{
-    height:150px;
+    height:120px;
     border-radius:6px;
     cursor:pointer;
 }
@@ -165,6 +165,13 @@ header button:hover{ background:#ff5555; }
     max-width:90%;
     max-height:90%;
 }
+
+/* Footer */
+footer{
+    text-align:center;
+    padding:20px;
+    color:#555;
+}
 </style>
 </head>
 <body>
@@ -195,13 +202,14 @@ header button:hover{ background:#ff5555; }
 <!-- ฟอร์มเพิ่มบ้านศัตรู -->
 <section id="add-form">
     <h3>เพิ่มบ้านศัตรู</h3>
+    <input type="text" id="enemy_name" placeholder="ชื่อศัตรู" required>
     <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู<input type="file" id="enemy_file" multiple accept="image/*"></label>
     <div id="enemy_preview"></div>
 
     <label class="upload-btn">⚔ เลือกรูปทีมบุก<input type="file" id="team_file" multiple accept="image/*"></label>
     <div id="team_preview"></div>
 
-    <textarea id="strategy" rows="3" placeholder="ชื่อ/วิธีบุกบ้าน" required></textarea>
+    <textarea id="strategy" rows="3" placeholder="รายละเอียด / วิธีบุก" required></textarea>
     <select id="category">
         <option value="castle">สงครามชิงปราสาท</option>
         <option value="guild">สงครามกิลด์</option>
@@ -215,7 +223,7 @@ header button:hover{ background:#ff5555; }
 <!-- modal zoom -->
 <div id="imgModal" onclick="closeModal()"><img id="modalImg"></div>
 
-<footer style="text-align:center; padding:20px; color:#555;">HORCRUX • Dominate The War</footer>
+<footer>HORCRUX • Dominate The War</footer>
 
 <script>
 const supabaseClient = supabase.createClient(
@@ -233,14 +241,14 @@ async function loadData(){
     allData = data;
 }
 
-// กรองหมวดหมู่ -> ใส่ dropdown
+// กรองหมวดหมู่ -> update dropdown ด้วย enemy_name
 function filterCategory(cat){
     currentCategory = cat;
-    const filtered = allData.filter(row=>row.category === cat);
+    const filtered = allData.filter(row=>row.category===cat);
     const dropdown = document.getElementById("enemyDropdown");
     dropdown.innerHTML = `<option value="">-- เลือกศัตรู --</option>`;
     filtered.forEach((row,i)=>{
-        dropdown.innerHTML += `<option value="${i}">${row.strategy}</option>`;
+        dropdown.innerHTML += `<option value="${i}">${row.enemy_name}</option>`;
     });
     document.getElementById("houseDetails").innerHTML = "";
 }
@@ -257,6 +265,7 @@ function showEnemyDetails(){
 
     document.getElementById("houseDetails").innerHTML = `
         <div class="house-card">
+            <b>ชื่อศัตรู:</b> ${row.enemy_name}<br><br>
             <b>ฝั่งศัตรู:</b><br>${enemySlider}<br>
             <b>ทีมบุก:</b><br>${teamSlider}<br>
             <b>รายละเอียด:</b><br>${row.strategy}
@@ -300,10 +309,12 @@ async function saveData(){
     const teamFiles = document.getElementById("team_file").files;
     const strategy = document.getElementById("strategy").value;
     const category = document.getElementById("category").value;
-    if(enemyFiles.length===0||teamFiles.length===0||!strategy){ alert("กรุณากรอกทุกช่อง!"); return; }
+    const enemy_name = document.getElementById("enemy_name").value;
+    if(!enemy_name || enemyFiles.length===0||teamFiles.length===0||!strategy){ alert("กรุณากรอกทุกช่อง!"); return; }
     const enemyUrls = await uploadMultipleImages(enemyFiles);
     const teamUrls = await uploadMultipleImages(teamFiles);
     const { error } = await supabaseClient.from("enemy_base").insert([{
+        enemy_name,
         enemy_imgs: enemyUrls,
         team_imgs: teamUrls,
         strategy,
