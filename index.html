@@ -49,15 +49,17 @@ header{
 }
 
 /* Dashboard */
+/* Dashboard */
 .dashboard{
     display:grid;
-    grid-template-columns: 1fr auto;
-    align-items:center;
+    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
     gap:20px;
-    padding:30px;
-    width:90%;
-    margin:0 auto;
+    padding:60px 30px 30px 30px; /* เพิ่ม padding-top ให้มากขึ้นเพื่อขยับลง */
+    justify-items:center;
+    width: 90%;
+    margin: 0 auto;
 }
+
 .cards-panel{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
