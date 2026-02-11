@@ -13,20 +13,19 @@ body {
     margin:0;
     font-family:'Orbitron',sans-serif;
     color:white;
-
-    /* background ใหม่ */
-    background: url('Horcrux-BG.png') no-repeat center center fixed; 
-    background-size: cover;  /* ปรับขนาดเต็มหน้าจอทั้ง width/height */
+    position: relative; /* เพิ่ม */
+    background: url('Horcrux-BG.png') no-repeat center center fixed;
+    background-size: cover;
 }
 
-/* หากต้องการให้ overlay มืดหน่อยเพื่อให้ตัวหนังสืออ่านง่าย */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);  /* ปรับความเข้มของ overlay */
+    background: rgba(0,0,0,0.5);
     z-index: -1;
 }
+
 header{
     text-align:center;
     padding:40px 20px;
