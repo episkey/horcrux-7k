@@ -19,122 +19,57 @@ body{
     color:white;
 }
 
-/* Header / โลโก้ */
+/* Header / Logo */
 header{
     text-align:center;
-    padding:60px 20px;
+    padding:40px 20px;
 }
-
 .logo-container{
-    position:relative;
     display:inline-block;
+    position:relative;
 }
-
 .logo-container img{
-    width:200px;
-    height:200px;
+    width:150px;
+    height:150px;
     border-radius:50%;
-    border:none;
-    box-shadow: 0 0 30px #ff0033, 0 0 50px rgba(255,0,0,0.5);
-    position: relative;
-    z-index: 2;
+    box-shadow: 0 0 20px #ff0033, 0 0 40px rgba(255,0,0,0.5);
 }
-
-.logo-container::before{
-    content:'';
-    position:absolute;
-    top:-20px;
-    left:-20px;
-    width:240px;
-    height:240px;
-    border-radius:50%;
-    background: radial-gradient(circle, rgba(255,0,0,0.4), transparent 70%);
-    filter: blur(25px);
-    animation: flame 2s infinite alternate;
-    z-index:1;
-}
-
-@keyframes flame{
-    0%{transform: scale(1) rotate(0deg);}
-    25%{transform: scale(1.05) rotate(5deg);}
-    50%{transform: scale(1.1) rotate(-5deg);}
-    75%{transform: scale(1.05) rotate(5deg);}
-    100%{transform: scale(1) rotate(0deg);}
-}
-
 .logo-container .sub{
     color:#ff4444;
-    margin-top:15px;
-    font-size:22px;
+    margin-top:10px;
+    font-size:18px;
 }
 
-/* Dashboard */
+/* Dashboard Menu */
 .dashboard{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:25px;
-    padding:50px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:20px;
+    margin:20px;
 }
-
 .card{
     background:#111;
     border:2px solid #ff0033;
-    padding:40px 20px;
+    padding:20px 30px;
     text-align:center;
     border-radius:12px;
-    transition:0.3s;
     cursor:pointer;
+    transition:0.3s;
 }
-
 .card:hover{
     transform:scale(1.05);
-    box-shadow:0 0 20px #ff0033;
+    box-shadow:0 0 15px #ff0033;
 }
-
-.card h2{
-    margin:15px 0;
-    font-size:20px;
-}
-
 .card span{
-    font-size:40px;
+    font-size:30px;
+}
+.card h2{
+    margin:10px 0 0;
+    font-size:16px;
 }
 
-/* บ้านศัตรู */
-.house-list{
-    margin:30px 50px;
-    max-height:500px;    /* หน้าไม่ยาวเกินไป */
-    overflow-y:auto;     /* scroll ภายใน container */
-    padding-right:10px;
-    border:2px solid #ff0033;
-    border-radius:12px;
-    background:#111;
-}
-
-
-.house-card{
-    background:#111;
-    border:2px solid #ff0033;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:15px;
-    text-align:center;
-}
-
-.house-card img{
-    max-width:100%;
-    border-radius:8px;
-    margin-bottom:10px;
-}
-
-/* Footer */
-footer{
-    text-align:center;
-    padding:30px;
-    color:#555;
-}
-
-/* Form เพิ่มบ้านศัตรู */
+/* Form */
 #add-form{
     background:#111;
     border:2px solid #ff0033;
@@ -158,13 +93,10 @@ footer{
     border:none;
     border-radius:6px;
     cursor:pointer;
-    transition:0.3s;
 }
 #add-form button:hover{
     background:#ff5555;
 }
-
-/* ปุ่มเลือกไฟล์ */
 .upload-btn{
     display:block;
     background:#ff0033;
@@ -178,42 +110,42 @@ footer{
 .upload-btn:hover{
     background:#ff4444;
 }
-.upload-btn input[type=file]{
-    display:none;
-}
 
-/* preview container */
-.preview-container{
-    display:flex;
-    overflow-x:auto;
-    gap:5px;
-    margin-bottom:10px;
-    scroll-behavior:smooth;
+/* House List */
+.house-list{
+    margin:20px auto;
+    max-width:1000px;
 }
-.preview-container img{
-    width:80px;
-    height:80px;
-    object-fit:cover;
-    border-radius:6px;
-    cursor:pointer;
-    border:1px solid #ff0033;
-    flex-shrink:0;
+.house-card{
+    background:#111;
+    border:2px solid #ff0033;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
 }
-
-/* slider บ้านศัตรู */
+.house-card h4{
+    margin:5px 0;
+}
 .slider {
     display:flex;
     overflow-x:auto;
     gap:10px;
-    scroll-behavior:smooth;
+    padding:5px 0;
 }
 .slider img{
-    height:150px; /* ลดความสูงให้ดูหลายรูปพร้อมกัน */
+    height:150px;
     border-radius:8px;
-    flex-shrink:0;
+    cursor:pointer;
+}
+.slider::-webkit-scrollbar{
+    height:8px;
+}
+.slider::-webkit-scrollbar-thumb{
+    background:#ff0033;
+    border-radius:4px;
 }
 
-/* modal zoom */
+/* Modal Zoom */
 #imgModal{
     display:none;
     position:fixed;
@@ -227,25 +159,18 @@ footer{
     max-width:90%;
     max-height:90%;
 }
-
-/* ปุ่ม slider (ถ้าต้องการ) */
-.prev, .next{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    background:#00000070;
-    color:white;
-    border:none;
-    padding:5px 8px;
-    cursor:pointer;
-    z-index:2;
+#imgModal.close{
+    display:none;
 }
-.prev{ left:0; }
-.next{ right:0; }
 
+/* Footer */
+footer{
+    text-align:center;
+    padding:20px;
+    color:#555;
+}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -255,220 +180,132 @@ footer{
     </div>
 </header>
 
+<!-- Dashboard Menu -->
 <section class="dashboard">
-    <div class="card" onclick="filterCategory('castle')">
-        <span>🏰</span>
-        <h2>สงครามชิงปราสาท</h2>
-    </div>
-    <div class="card" onclick="filterCategory('guild')">
-        <span>⚔</span>
-        <h2>สงครามกิลด์</h2>
-    </div>
-    <div class="card" onclick="filterCategory('traveler')">
-        <span>🌌</span>
-        <h2>กลุ่มนักเดินทางจุติ</h2>
-    </div>
-    <div class="card" onclick="filterCategory('strategy')">
-        <span>🧠</span>
-        <h2>แนวทางตีด่าน / อื่น ๆ</h2>
-    </div>
+    <div class="card" onclick="filterCategory('castle')"><span>🏰</span><h2>สงครามชิงปราสาท</h2></div>
+    <div class="card" onclick="filterCategory('guild')"><span>⚔</span><h2>สงครามกิลด์</h2></div>
+    <div class="card" onclick="filterCategory('traveler')"><span>🌌</span><h2>กลุ่มนักเดินทางจุติ</h2></div>
+    <div class="card" onclick="filterCategory('strategy')"><span>🧠</span><h2>แนวทางตีด่าน / อื่น ๆ</h2></div>
 </section>
 
-<!-- ฟอร์มเพิ่มบ้านศัตรู -->
+<!-- Form เพิ่มบ้าน -->
 <form id="add-form">
     <h3>เพิ่มบ้านศัตรู</h3>
-
-    <label class="upload-btn">📷 เลือกรูปฝั่งศัตรู
-        <input type="file" id="enemy_file" multiple accept="image/*">
+    <label class="upload-btn">
+      📷 เลือกรูปฝั่งศัตรู
+      <input type="file" id="enemy_file" multiple accept="image/*">
     </label>
-    <div class="preview-container" id="enemy_preview"></div>
-
-    <label class="upload-btn">⚔ เลือกรูปทีมบุก
-        <input type="file" id="team_file" multiple accept="image/*">
+    <label class="upload-btn">
+      ⚔ เลือกรูปทีมบุก
+      <input type="file" id="team_file" multiple accept="image/*">
     </label>
-    <div class="preview-container" id="team_preview"></div>
-
     <textarea id="strategy" rows="3" placeholder="วิธีบุกบ้าน" required></textarea>
-
     <select id="category">
         <option value="castle">สงครามชิงปราสาท</option>
         <option value="guild">สงครามกิลด์</option>
         <option value="traveler">กลุ่มนักเดินทางจุติ</option>
         <option value="strategy">แนวทางตีด่าน / อื่น ๆ</option>
     </select>
-
     <button type="button" onclick="saveData()">บันทึกบ้าน</button>
 </form>
 
-
+<!-- แสดงบ้านศัตรู -->
 <div class="house-list" id="list"></div>
 
+<!-- Modal Zoom -->
 <div id="imgModal" onclick="closeModal()">
     <img id="modalImg">
 </div>
 
-<footer>
-    HORCRUX • Dominate The War
-</footer>
+<footer>HORCRUX • Dominate The War</footer>
 
 <script>
-// ----- Supabase setup -----
+// ----- Supabase -----
 const supabaseClient = supabase.createClient(
   "https://cwkmfpxmzqlbrioununv.supabase.co",
   "sb_publishable_bmbm3cCoH3OoVvMfbQis8A_AgJgpCMX"
 );
 
-let allData=[];
+let allData = [];
 
-// ======= preview before upload =======
-document.getElementById("enemy_file").addEventListener("change",e=>{
-    showPreview(e.target.files,"enemy_preview");
-});
-document.getElementById("team_file").addEventListener("change",e=>{
-    showPreview(e.target.files,"team_preview");
-});
-
-function showPreview(files,previewId){
-    let html="";
-    for(const file of files){
-        html+=`<img src="${URL.createObjectURL(file)}" onclick="openModal(this.src)">`;
-    }
-    document.getElementById(previewId).innerHTML=html;
-}
-
-// ======= load data =======
 async function loadData(){
-    const { data } = await supabaseClient
+    const { data, error } = await supabaseClient
         .from("enemy_base")
         .select("*")
-        .order("created_at",{ascending:false});
-    allData = data || [];
-    displayData(allData);
-}
-
-// ======= display data =======
-function createSlider(images,id){
-    if(!images.length) return "-";
-    return `
-    <div class="slider">
-        <button class="prev" onclick="moveSlide('${id}',-1)">‹</button>
-        <div class="slide-container" id="${id}">
-            ${images.map(img=>`<img src="${img}" onclick="openModal('${img}')">`).join("")}
-        </div>
-        <button class="next" onclick="moveSlide('${id}',1)">›</button>
-    </div>`;
+        .order("created_at",{ ascending: false });
+    if(error){ console.error(error); return; }
+    allData = data;
+    displayData(data);
 }
 
 function displayData(data){
-    let html="";
+    const list = document.getElementById("list");
+    list.innerHTML = "";
     data.forEach(row=>{
-        let enemyArray=Array.isArray(row.enemy_imgs)?row.enemy_imgs:[];
-        let teamArray=Array.isArray(row.team_imgs)?row.team_imgs:[];
-
-        html+=`
-        <div class="house-card">
-            <b>ฝั่งศัตรู:</b><br>
-            ${createSlider(enemyArray,"enemy_"+row.id)}<br>
-            <b>ทีมบุก:</b><br>
-            ${createSlider(teamArray,"team_"+row.id)}<br>
-            <b>หมวด:</b> ${row.category || "-"}<br>
-            <b>วิธีบุก:</b><br>${row.strategy || "-"}<br><br>
-            <button onclick="deleteData(${row.id})">ลบ</button>
-        </div>`;
+        const enemySlider = `<div class="slider">${(row.enemy_imgs||[]).map(i=>`<img src="${i}" onclick="openModal('${i}')">`).join('')}</div>`;
+        const teamSlider = `<div class="slider">${(row.team_imgs||[]).map(i=>`<img src="${i}" onclick="openModal('${i}')">`).join('')}</div>`;
+        list.innerHTML += `
+            <div class="house-card">
+                <h4>ฝั่งศัตรู:</h4>${enemySlider}
+                <h4>ทีมบุก:</h4>${teamSlider}
+                <h4>วิธีบุก:</h4>${row.strategy}
+            </div>
+        `;
     });
-    document.getElementById("list").innerHTML=html;
 }
 
-// ======= slider move =======
-function moveSlide(id,dir){
-    const container=document.getElementById(id);
-    container.scrollLeft += dir*130;
+function filterCategory(cat){
+    displayData(allData.filter(d=>d.category===cat));
 }
 
-// ======= modal =======
-function openModal(src){
-    document.getElementById("modalImg").src=src;
-    document.getElementById("imgModal").style.display="flex";
-}
-function closeModal(){
-    document.getElementById("imgModal").style.display="none";
-}
-
-// ======= upload multiple images =======
+// Upload multiple images
 async function uploadMultipleImages(files){
-    if(!files.length) return [];
-    const urls=[];
+    if(!files || files.length===0) return [];
+    const urls = [];
     for(const file of files){
-        const ext=file.name.split('.').pop();
-        const name=`${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-        const path=`horcrux/${name}`;
-
-        const { error } = await supabaseClient.storage
-            .from("images")
-            .upload(path,file,{upsert:true});
-
+        const ext = file.name.split('.').pop();
+        const name = `${Date.now()}_${Math.random().toString(36).substring(2)}.${ext}`;
+        const path = `horcrux/${name}`;
+        const { error } = await supabaseClient.storage.from('images').upload(path, file, {cacheControl:'3600', upsert:true});
         if(error){ console.error(error); continue; }
-
-        const { data } = supabaseClient.storage
-            .from("images")
-            .getPublicUrl(path);
-
+        const { data } = supabaseClient.storage.from('images').getPublicUrl(path);
         urls.push(data.publicUrl);
     }
     return urls;
 }
 
-// ======= save data =======
+// Save Data
 async function saveData(){
-    const enemyFiles=document.getElementById("enemy_file").files;
-    const teamFiles=document.getElementById("team_file").files;
-    const strategy=document.getElementById("strategy").value;
-    const category=document.getElementById("category").value;
-
-    if(enemyFiles.length===0 || teamFiles.length===0 || !strategy){
-        alert("กรุณากรอกข้อมูลให้ครบ!");
-        return;
-    }
-
-    const enemyUrls=await uploadMultipleImages(enemyFiles);
-    const teamUrls=await uploadMultipleImages(teamFiles);
-
-    const { error }=await supabaseClient
-        .from("enemy_base")
-        .insert([{
-            enemy_imgs:enemyUrls,
-            team_imgs:teamUrls,
-            strategy,
-            category
-        }]);
-
+    const enemyFiles = document.getElementById("enemy_file").files;
+    const teamFiles = document.getElementById("team_file").files;
+    const strategy = document.getElementById("strategy").value;
+    const category = document.getElementById("category").value;
+    if(enemyFiles.length===0 || teamFiles.length===0 || !strategy){ alert("กรุณากรอกทุกช่อง!"); return; }
+    const enemyUrls = await uploadMultipleImages(enemyFiles);
+    const teamUrls = await uploadMultipleImages(teamFiles);
+    const { error } = await supabaseClient.from("enemy_base").insert([{
+        enemy_imgs: enemyUrls,
+        team_imgs: teamUrls,
+        strategy,
+        category
+    }]);
     if(error){ alert(error.message); return; }
-
     alert("บันทึกสำเร็จ!");
     document.getElementById("add-form").reset();
-    document.getElementById("enemy_preview").innerHTML="";
-    document.getElementById("team_preview").innerHTML="";
     loadData();
 }
 
-// ======= delete =======
-async function deleteData(id){
-    if(!confirm("ลบรายการนี้?")) return;
-    await supabaseClient.from("enemy_base").delete().eq("id",id);
-    loadData();
+// Modal Zoom
+function openModal(src){
+    const modal = document.getElementById("imgModal");
+    modal.style.display="flex";
+    document.getElementById("modalImg").src = src;
+}
+function closeModal(){
+    document.getElementById("imgModal").style.display="none";
 }
 
-// ======= filter category =======
-function filterCategory(cat){
-    const filtered = allData.filter(row => row.category === cat);
-    displayData(filtered);
-}
-
-// ======= init =======
 loadData();
 </script>
-
-
-
 </body>
 </html>
