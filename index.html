@@ -184,9 +184,26 @@ button:hover{
         <img src="HORCRUX-LOGO.png" alt="HORCRUX Logo">
         <div class="sub">COMMAND CENTER</div>
     </div>
-    <!-- ปุ่มเพิ่มบ้านศัตรู -->
-    <button onclick="toggleAddForm()">➕ เพิ่มบ้านศัตรู</button>
 </header>
+
+<section class="dashboard">
+    <div class="card" onclick="showCategory('castle')">
+        <span>🏰</span>
+        <h2>สงครามชิงปราสาท</h2>
+    </div>
+    <div class="card" onclick="showCategory('guild')">
+        <span>⚔</span>
+        <h2>สงครามกิลด์</h2>
+    </div>
+    <div class="card" onclick="showCategory('traveler')">
+        <span>🌌</span>
+        <h2>นักเดินทางจุติ</h2>
+    </div>
+    <div class="card" onclick="showCategory('strategy')">
+        <span>🧠</span>
+        <h2>แนวทางตีด่าน / อื่น ๆ</h2>
+    </div>
+</section>
 
 <!-- ฟอร์มเพิ่มบ้านศัตรู -->
 <section id="add-form" style="display:none;">
@@ -213,7 +230,6 @@ button:hover{
 
     <button type="button" onclick="saveData()">บันทึกบ้าน</button>
 </section>
-
 
 <section id="list"></section>
 
