@@ -198,6 +198,29 @@ footer{
     padding:20px;
     color:#555;
 }
+
+.dashboard-wrapper {
+    margin-top: 200px; /* ปรับค่านี้ตามต้องการ */
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* ทำให้ dropdown + ปุ่ม เพิ่ม อยู่ใต้ dashboard */
+    align-items: center;    /* ให้ทั้งหมดอยู่กลางหน้า */
+    gap: 20px;              /* เว้นระยะระหว่าง dashboard กับ dropdown+ปุ่ม */
+}
+.controls {
+    display: flex;
+    gap: 10px;
+}
+.controls select, .controls button {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #ff0033;
+    color: white;
+    cursor: pointer;
+}
+.controls button:hover, .controls select:hover { background: #ff5555; }
+
 </style>
 </head>
 <body>
@@ -209,6 +232,7 @@ footer{
     </div>
 </header>
 
+<div class="dashboard-wrapper">
 <section class="dashboard">
     <div class="cards-panel">
         <div class="card" onclick="filterCategory('castle')"><span>🏰</span><h2>สงครามชิงปราสาท</h2></div>
@@ -223,7 +247,9 @@ footer{
         </select>
         <button onclick="toggleAddForm()">➕ เพิ่มบ้านศัตรู</button>
     </div>
+    </div>
 </section>
+
 
 <!-- แสดงรายละเอียดบ้านศัตรู -->
 <div id="houseDetails"></div>
